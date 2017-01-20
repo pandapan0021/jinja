@@ -8,6 +8,7 @@
     :copyright: (c) 2017 by the Jinja Team.
     :license: BSD, see LICENSE for more details.
 """
+import operator
 import re
 from collections import Mapping
 from jinja2.runtime import Undefined
@@ -125,6 +126,11 @@ def test_iterable(value):
     return True
 
 
+def test_escaped(value):
+    """Check if the value is escaped."""
+    return hasattr(value, '__html__')
+
+
 def test_in(value, seq):
     """Check if value is in seq.
 
@@ -133,61 +139,10 @@ def test_in(value, seq):
     return value in seq
 
 
-def test_escaped(value):
-    """Check if the value is escaped."""
-    return hasattr(value, '__html__')
-
-
-def test_compare_eq(value, other):
-    """Check if an object has the same value as another object:
-
-    .. sourcecode:: jinja
-
-        {% if foo.expression is equalto 42 %}
-            the foo attribute evaluates to the constant 42
-        {% endif %}
-
-    This appears to be a useless test as it does exactly the same as the
-    ``==`` operator, but it can be useful when used together with the
-    `selectattr` function:
-
-    .. sourcecode:: jinja
-
-        {{ users|selectattr("email", "equalto", "foo@bar.invalid") }}
-
-    .. versionadded:: 2.8
-    """
-    return value == other
-
-
-def test_compare_ne(value, other):
-    """Check if an object is not equal to another object."""
-    return value != other
-
-
-def test_compare_gt(value, other):
-    """Check if an object is greater than another object."""
-    return value > other
-
-
-def test_compare_ge(value, other):
-    """Check if an object is greater than or equal to another object."""
-    return value >= other
-
-
-def test_compare_lt(value, other):
-    """Check if an object is less than another object."""
-    return value < other
-
-
-def test_compare_le(value, other):
-    """Check if an object is less than or equal to another object."""
-    return value <= other
-
-
-test_equalto = test_compare_eq
-test_greaterthan = test_compare_gt
-test_lessthan = test_compare_lt
+# deprecated aliases, use the operator module instead
+test_equalto = operator.eq
+test_greaterthan = operator.gt
+test_lessthan = operator.lt
 
 TESTS = {
     'odd':              test_odd,
@@ -205,21 +160,21 @@ TESTS = {
     'iterable':         test_iterable,
     'callable':         test_callable,
     'sameas':           test_sameas,
-    'in':               test_in,
     'escaped':          test_escaped,
-    '==':               test_compare_eq,
-    'eq':               test_compare_eq,
-    'equalto':          test_compare_eq,
-    '!=':               test_compare_ne,
-    'ne':               test_compare_ne,
-    '>':                test_compare_gt,
-    'gt':               test_compare_gt,
-    'greaterthan':      test_compare_gt,
-    'ge':               test_compare_ge,
-    '>=':               test_compare_ge,
-    '<':                test_compare_lt,
-    'lt':               test_compare_lt,
-    'lessthan':         test_compare_lt,
-    '<=':               test_compare_le,
-    'le':               test_compare_le,
+    'in':               test_in,
+    '==':               operator.eq,
+    'eq':               operator.eq,
+    'equalto':          operator.eq,
+    '!=':               operator.ne,
+    'ne':               operator.ne,
+    '>':                operator.gt,
+    'gt':               operator.gt,
+    'greaterthan':      operator.gt,
+    'ge':               operator.ge,
+    '>=':               operator.ge,
+    '<':                operator.lt,
+    'lt':               operator.lt,
+    'lessthan':         operator.lt,
+    '<=':               operator.le,
+    'le':               operator.le,
 }
