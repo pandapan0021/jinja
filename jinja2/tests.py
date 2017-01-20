@@ -139,11 +139,6 @@ def test_in(value, seq):
     return value in seq
 
 
-# deprecated aliases, use the operator module instead
-test_equalto = operator.eq
-test_greaterthan = operator.gt
-test_lessthan = operator.lt
-
 TESTS = {
     'odd':              test_odd,
     'even':             test_even,
