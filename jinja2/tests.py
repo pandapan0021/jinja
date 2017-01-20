@@ -103,28 +103,6 @@ def test_sequence(value):
     return True
 
 
-def test_equalto(value, other):
-    """Check if an object has the same value as another object:
-
-    .. sourcecode:: jinja
-
-        {% if foo.expression is equalto 42 %}
-            the foo attribute evaluates to the constant 42
-        {% endif %}
-
-    This appears to be a useless test as it does exactly the same as the
-    ``==`` operator, but it can be useful when used together with the
-    `selectattr` function:
-
-    .. sourcecode:: jinja
-
-        {{ users|selectattr("email", "equalto", "foo@bar.invalid") }}
-
-    .. versionadded:: 2.8
-    """
-    return value == other
-
-
 def test_sameas(value, other):
     """Check if an object points to the same memory address than another
     object:
@@ -147,21 +125,6 @@ def test_iterable(value):
     return True
 
 
-def test_escaped(value):
-    """Check if the value is escaped."""
-    return hasattr(value, '__html__')
-
-
-def test_greaterthan(value, other):
-    """Check if value is greater than other."""
-    return value > other
-
-
-def test_lessthan(value, other):
-    """Check if value is less than other."""
-    return value < other
-
-
 def test_in(value, seq):
     """Check if value is in seq.
 
@@ -169,6 +132,62 @@ def test_in(value, seq):
     """
     return value in seq
 
+
+def test_escaped(value):
+    """Check if the value is escaped."""
+    return hasattr(value, '__html__')
+
+
+def test_compare_eq(value, other):
+    """Check if an object has the same value as another object:
+
+    .. sourcecode:: jinja
+
+        {% if foo.expression is equalto 42 %}
+            the foo attribute evaluates to the constant 42
+        {% endif %}
+
+    This appears to be a useless test as it does exactly the same as the
+    ``==`` operator, but it can be useful when used together with the
+    `selectattr` function:
+
+    .. sourcecode:: jinja
+
+        {{ users|selectattr("email", "equalto", "foo@bar.invalid") }}
+
+    .. versionadded:: 2.8
+    """
+    return value == other
+
+
+def test_compare_ne(value, other):
+    """Check if an object is not equal to another object."""
+    return value != other
+
+
+def test_compare_gt(value, other):
+    """Check if an object is greater than another object."""
+    return value > other
+
+
+def test_compare_ge(value, other):
+    """Check if an object is greater than or equal to another object."""
+    return value >= other
+
+
+def test_compare_lt(value, other):
+    """Check if an object is less than another object."""
+    return value < other
+
+
+def test_compare_le(value, other):
+    """Check if an object is less than or equal to another object."""
+    return value <= other
+
+
+test_equalto = test_compare_eq
+test_greaterthan = test_compare_gt
+test_lessthan = test_compare_lt
 
 TESTS = {
     'odd':              test_odd,
@@ -186,9 +205,21 @@ TESTS = {
     'iterable':         test_iterable,
     'callable':         test_callable,
     'sameas':           test_sameas,
-    'equalto':          test_equalto,
+    'in':               test_in,
     'escaped':          test_escaped,
-    'greaterthan':      test_greaterthan,
-    'lessthan':         test_lessthan,
-    'in':               test_in
+    '==':               test_compare_eq,
+    'eq':               test_compare_eq,
+    'equalto':          test_compare_eq,
+    '!=':               test_compare_ne,
+    'ne':               test_compare_ne,
+    '>':                test_compare_gt,
+    'gt':               test_compare_gt,
+    'greaterthan':      test_compare_gt,
+    'ge':               test_compare_ge,
+    '>=':               test_compare_ge,
+    '<':                test_compare_lt,
+    'lt':               test_compare_lt,
+    'lessthan':         test_compare_lt,
+    '<=':               test_compare_le,
+    'le':               test_compare_le,
 }

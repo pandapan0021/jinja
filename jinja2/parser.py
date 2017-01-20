@@ -819,10 +819,19 @@ class Parser(object):
             negated = True
         else:
             negated = False
-        name = self.stream.expect('name').value
-        while self.stream.current.type == 'dot':
-            next(self.stream)
-            name += '.' + self.stream.expect('name').value
+
+        # If the next token is a comparison operator, treat it as a name.
+        # This allows using the operator symbols in the select filter without
+        # breaking unexpectedly when used in a test node.
+        if self.stream.current.type in _compare_operators:
+            name = next(self.stream).value
+        else:
+            name = self.stream.expect('name').value
+
+            while self.stream.current.type == 'dot':
+                next(self.stream)
+                name += '.' + self.stream.expect('name').value
+
         dyn_args = dyn_kwargs = None
         kwargs = []
         if self.stream.current.type == 'lparen':
