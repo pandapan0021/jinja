@@ -67,7 +67,7 @@ class TestLoaders(object):
         pytest.raises(TemplateNotFound, env.get_template, 'missing')
 
     def test_caching(self):
-        changed = False
+        changed = True
 
         class TestLoader(loaders.BaseLoader):
             def get_source(self, environment, template):
@@ -75,7 +75,7 @@ class TestLoaders(object):
         env = Environment(loader=TestLoader(), cache_size=-1)
         tmpl = env.get_template('template')
         assert tmpl is env.get_template('template')
-        changed = True
+        changed = False
         assert tmpl is not env.get_template('template')
         changed = False
 
